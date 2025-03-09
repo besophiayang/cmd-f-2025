@@ -51,13 +51,13 @@ const char index_html[] PROGMEM = R"rawliteral(
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            height: 3000px; 
-            overflow-y: scroll; 
+            height: 3000px;
+            overflow-y: scroll;
         }
 
         .container {
             width: 1900px;
-            margin: 0 auto; 
+            margin: 0 auto;
         }
 
         nav {
@@ -92,10 +92,41 @@ const char index_html[] PROGMEM = R"rawliteral(
             -webkit-text-fill-color: transparent;
         }
 
-        .functions {
-            text-align: center;
-            padding: 50px 0;
+        .meet-otto {
+            text-align: left;
+            padding: 450px 0 40px 120px; 
         }
+
+        .meet-otto span {
+            font-size: 120px;
+            line-height: 1;
+        }
+
+        .meet-otto .meet {
+            color: #b96eff;
+            font-weight: 300;
+            margin-right: 30px;
+        }
+
+        .meet-otto .otto {
+            color: white;
+            font-weight: 600;
+        }
+
+        .meet-description {
+            font-size: 28px;
+            color: #b3b3b3;
+            font-weight: 300;
+            margin-top: 15px;
+            padding-left: 205px;
+        }
+
+          .functions {
+              text-align: center;
+              padding: 50px 0;
+              padding-top: 300px; 
+          }
+
 
         .functions-header {
             font-family: 'Inter', sans-serif;
@@ -112,6 +143,31 @@ const char index_html[] PROGMEM = R"rawliteral(
             justify-content: space-around;
             gap: 20px;
         }
+
+        .function-boxes {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .function-box {
+            background-color: #111;
+            padding: 30px;
+            border-radius: 15px;
+            flex-basis: 30%;
+        }
+
+        .function-box p {
+            font-size: 18px;
+            color: #b3b3b3;
+            line-height: 1.6;
+        }
+
+        .function-box strong {
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -124,11 +180,31 @@ const char index_html[] PROGMEM = R"rawliteral(
                 <a href="#">Check on Otto</a>
             </div>
         </nav>
+
+                <!-- Meet Otto Section -->
+        <div class="meet-otto">
+            <span class="meet">Meet</span> <span class="otto">Otto</span>
+        </div>
+        <div class="meet-description">
+            A nature inspired "otto"-matic fruit harvester
+        </div>
+
+        <!-- Functions Section -->
         <div class="functions">
             <h2 class="functions-header">Functions</h2>
-            <p>Ultrasonic Sensor Distance: <span id="distance">%DISTANCE%</span> cm</p>
+            <div class="function-boxes">
+                <div class="function-box">
+                    <p><strong>Harvesting:</strong> Otto uses an ultrasonic distance sensor to detect the proximity of ripe fruit. Once detected, Otto extends its gripper to carefully harvest the fruit without causing damage.</p>
+                </div>
+                <div class="function-box">
+                    <p><strong>Distance Measurement:</strong> The ultrasonic sensor measures the distance between Otto and the fruit. If the fruit is within a pre-set range, Otto activates its stepper motor to perform the harvest.</p>
+                </div>
+                <div class="function-box">
+                    <p><strong>Wireless Monitoring:</strong> You can monitor Otto’s performance remotely via the ESP32 web server. The real-time distance from fruit and harvesting status are displayed on the dashboard.</p>
+                </div>
+            </div>
         </div>
-    </div>
+
     <script>
         setInterval(function() {
             fetch("/distanceCm").then(response => response.text()).then(data => {
