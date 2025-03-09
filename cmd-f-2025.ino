@@ -43,25 +43,99 @@ const char index_html[] PROGMEM = R"rawliteral(
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Otto.</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-        body { background-color: #000; color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
-        nav a { color: white; text-decoration: none; margin-left: 70px; padding: 10px 30px; border-radius: 20px; transition: all 0.3s; font-size: 24px; }
-        nav a.active { border: 2px solid; border-image: linear-gradient(90deg, #a855f7, white); border-image-slice: 1; }
-        .logo img { height: 200px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 3000px; 
+            overflow-y: scroll; 
+        }
+
+        .container {
+            width: 1900px;
+            margin: 0 auto; 
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 70px;
+            padding: 10px 30px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        nav a.active {
+            border: 2px solid;
+            border-image: linear-gradient(90deg, #680092, white);
+            border-image-slice: 1;
+        }
+
+        .logo {
+            font-size: 150px;
+            font-weight: 300;
+            background: linear-gradient(90deg, #680092, white);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .functions {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .functions-header {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 80px;
+            background: linear-gradient(90deg, #680092, white);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
+
+        .function-boxes {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <nav>
-            <div class="logo"><img src="otto_logo.jpg" alt="Otto Logo"></div>
+            <div class="logo">Otto.</div>
             <div>
                 <a class="active" href="#">Home</a>
                 <a href="#">About</a>
                 <a href="#">Check on Otto</a>
             </div>
         </nav>
+        <div class="functions">
+            <h2 class="functions-header">Functions</h2>
+            <p>Ultrasonic Sensor Distance: <span id="distance">%DISTANCE%</span> cm</p>
+        </div>
     </div>
+    <script>
+        setInterval(function() {
+            fetch("/distanceCm").then(response => response.text()).then(data => {
+                document.getElementById("distance").innerText = data;
+            });
+        }, 1000);
+    </script>
 </body>
 </html>
 )rawliteral";
