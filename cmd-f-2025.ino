@@ -55,9 +55,6 @@ void setup() {
         Serial.println("mDNS started");
     }
 
-    server.begin();
-    Serial.println("HTTP server started");
-
 }
 
 void loop() {
