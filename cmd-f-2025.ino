@@ -113,7 +113,9 @@ void loop() {
     readDistance();
     if (distanceCm < DISTANCE_THRESHOLD) {
       Serial.println("Object detected and gripper closing");
-      myStepper.step(-stepsPerRevolution);
+      myStepper.step(stepsPerRevolution);
+      delay(3000);
+      myStepper.step(-(stepsPerRevolution*2));
     }
     delay(2000);
 }
