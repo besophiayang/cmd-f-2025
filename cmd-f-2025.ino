@@ -19,8 +19,8 @@ const int stepsPerRevolution = 2048;
 #define IN4 2
 Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
-const char* ssid = "WiFi";
-const char* password = "WiFi-Password";
+const char* ssid = "ORBI44"; 
+const char* password = "roundcarrot897"; 
 AsyncWebServer server(80);
 
 String readDistance() {
@@ -36,20 +36,49 @@ String readDistance() {
 }
 
 const char index_html[] PROGMEM = R"rawliteral(
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<head><title>ESP32 Distance Sensor Test Website</title></head>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <style>
+      html {
+          font-family: Arial;
+          display: inline-block;
+          margin: 0px auto;
+          text-align: center;
+      }
+      h2 { font-size: 3.0rem; }
+      p { font-size: 3.0rem; }
+      .units { font-size: 1.2rem; }
+      .dht-labels {
+          font-size: 1.5rem;
+          vertical-align: middle;
+          padding-bottom: 15px;
+      }
+    </style>
+</head>
 <body>
-    <h1>Ultrasonic Sensor</h1>
-    <p>Distance: <span id="Distance">%DISTANCE%</span> cm</p>
-    <script>
-        setInterval(async () => {
-            let res = await fetch('/distanceCm');
-            let text = await res.text();
-            document.getElementById('Distance').innerText = text;
-        }, 1000);
-    </script>
+    <h2>Ultrasonic sensor reading on server</h2>
+    <p>
+        <i class="fa fa-road" style="color:#00add6;"></i>
+        <span class="dht-labels">Distance</span>
+        <span id="Distance">%DISTANCE%</span>
+        <sup class="units">Cm</sup>
+    </p>
 </body>
+<script>
+setInterval(function ( ) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("Distance").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "/distanceCm", true);
+    xhttp.send();
+}, 1000 );
+</script>
 </html>
 )rawliteral";
 
@@ -61,9 +90,11 @@ String processor(const String& var) {
 }
 
 void setup() {
-  Serial.begin(115200);
-    pinMode(trigPin, OUTPUT);
+    Serial.begin(115200);
+    pinMode(trigPin, OUTPUT); 
     pinMode(echoPin, INPUT);
+
+    myStepper.setSpeed(5);
 
     WiFi.disconnect(true); 
     WiFi.begin(ssid, password);
@@ -72,7 +103,7 @@ void setup() {
         delay(1000);
         Serial.print(".");
     }
-    Serial.println("Connected to Wi-Fi");
+    Serial.println("\nConnected to Wi-Fi");
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
 
@@ -81,17 +112,24 @@ void setup() {
     } else {
         Serial.println("mDNS started");
     }
+
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send_P(200, "text/html", index_html, processor);
     });
+
     server.on("/distanceCm", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send_P(200, "text/plain", readDistance().c_str());
     });
+
     server.begin();
     Serial.println("HTTP server started");
 }
 
 void loop() {
-  Serial.println(readDistance());
-  delay(1000);
+    readDistance();
+    if (distanceCm < DISTANCE_THRESHOLD) {
+      Serial.println("Object detected and gripper closing");
+      myStepper.step(-stepsPerRevolution);
+    }
+    delay(2000);
 }
