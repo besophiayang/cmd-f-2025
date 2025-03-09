@@ -36,49 +36,33 @@ String readDistance() {
 }
 
 const char index_html[] PROGMEM = R"rawliteral(
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otto.</title>
     <style>
-      html {
-          font-family: Arial;
-          display: inline-block;
-          margin: 0px auto;
-          text-align: center;
-      }
-      h2 { font-size: 3.0rem; }
-      p { font-size: 3.0rem; }
-      .units { font-size: 1.2rem; }
-      .dht-labels {
-          font-size: 1.5rem;
-          vertical-align: middle;
-          padding-bottom: 15px;
-      }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body { background-color: #000; color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        nav a { color: white; text-decoration: none; margin-left: 70px; padding: 10px 30px; border-radius: 20px; transition: all 0.3s; font-size: 24px; }
+        nav a.active { border: 2px solid; border-image: linear-gradient(90deg, #a855f7, white); border-image-slice: 1; }
+        .logo img { height: 200px; }
     </style>
 </head>
 <body>
-    <h2>Ultrasonic sensor reading on server</h2>
-    <p>
-        <i class="fa fa-road" style="color:#00add6;"></i>
-        <span class="dht-labels">Distance</span>
-        <span id="Distance">%DISTANCE%</span>
-        <sup class="units">Cm</sup>
-    </p>
+    <div class="container">
+        <nav>
+            <div class="logo"><img src="otto_logo.jpg" alt="Otto Logo"></div>
+            <div>
+                <a class="active" href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Check on Otto</a>
+            </div>
+        </nav>
+    </div>
 </body>
-<script>
-setInterval(function ( ) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("Distance").innerHTML = this.responseText;
-        }
-    };
-    xhttp.open("GET", "/distanceCm", true);
-    xhttp.send();
-}, 1000 );
-</script>
 </html>
 )rawliteral";
 
